@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 // Главная страница
 Route::get('/', [MainController::class, 'index'])->name('home');
@@ -37,3 +38,7 @@ Route::get('/contacts', function () {
     ]);
 
 })->name('contacts');
+
+// Регистрация
+Route::get('/signin', [AuthController::class, 'create']);
+Route::post('/signin', [AuthController::class, 'registration']);
