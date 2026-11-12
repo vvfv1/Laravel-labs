@@ -1,12 +1,13 @@
 
 <?php
 
+use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Route;
 
 // Главная страница
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [MainController::class, 'index'])->name('home');
+
+Route::get('/galery/{id}', [MainController::class, 'galery']);
 
 // Страница "О нас"
 Route::get('/about', function () {
