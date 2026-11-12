@@ -1,9 +1,9 @@
-
 <?php
 
 use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ArticleController;
 
 // Главная страница
 Route::get('/', [MainController::class, 'index'])->name('home');
@@ -42,3 +42,7 @@ Route::get('/contacts', function () {
 // Регистрация
 Route::get('/signin', [AuthController::class, 'create']);
 Route::post('/signin', [AuthController::class, 'registration']);
+
+// Новости
+Route::get('/articles', [ArticleController::class, 'index'])
+    ->name('articles.index');
