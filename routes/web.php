@@ -43,29 +43,48 @@ Route::get('/contacts', function () {
 Route::get('/signin', [AuthController::class, 'create']);
 Route::post('/signin', [AuthController::class, 'registration']);
 
-// Новости
+// Новости — доступны всем
 Route::get('/articles', [ArticleController::class, 'index'])
     ->name('articles.index');
 
-// Создание новости
-Route::get('/articles/create', [ArticleController::class, 'create'])
-    ->name('articles.create');
-Route::post('/articles', [ArticleController::class, 'store'])
-    ->name('articles.store');
+// Операции с новостями — только для авторизованных
+Route::middleware('auth:sanctum')->group(function () {
 
-// Просмотр отдельной новости
+    Route::get('/articles/create', [ArticleController::class, 'create'])
+        ->name('articles.create');
+
+    Route::post('/articles', [ArticleController::class, 'store'])
+        ->name('articles.store');
+
+    Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])
+        ->name('articles.edit');
+
+    Route::put('/articles/{article}', [ArticleController::class, 'update'])
+        ->name('articles.update');
+
+    Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])
+        ->name('articles.destroy');
+
+    Route::post('/logout', [AuthController::class, 'logout'])
+        ->name('logout');
+});
+
+// Просмотр отдельной новости — доступен всем
 Route::get('/articles/{article}', [ArticleController::class, 'show'])
     ->name('articles.show');
 
+// Регистрация и авторизация 
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])
+    ->name('register');
 
-// Редактирование новости
-Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])
-    ->name('articles.edit');
+Route::post('/register', [AuthController::class, 'register'])
+    ->name('register.store');
 
-// Обновление новости
-Route::put('/articles/{article}', [ArticleController::class, 'update'])
-    ->name('articles.update');
+Route::get('/login', [AuthController::class, 'showLoginForm'])
+    ->name('login');
 
-// Удаление новости
-Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])
-    ->name('articles.destroy');
+Route::post('/login', [AuthController::class, 'login'])
+    ->name('login.store');
+
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
