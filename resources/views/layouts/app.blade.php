@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -32,6 +31,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
         }
 
         nav h2 {
@@ -46,6 +46,23 @@
         }
 
         nav a:hover {
+            color: #79b8ff;
+        }
+
+        nav form {
+            display: inline;
+            margin-left: 25px;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        nav button:hover {
             color: #79b8ff;
         }
 
@@ -93,8 +110,21 @@
                 <a href="{{ route('home') }}">Главная</a>
                 <a href="{{ route('about') }}">О нас</a>
                 <a href="{{ route('contacts') }}">Контакты</a>
+
                 <a href="{{ route('articles.index') }}">Новости</a>
-                <a href="{{ url('/signin') }}">Регистрация</a>
+
+                @auth
+                    <span>Привет, {{ Auth::user()->name }}!</span>
+
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit">Выйти</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}">Войти</a>
+                    <a href="{{ route('register') }}">Регистрация</a>
+                @endauth
+
             </div>
         </nav>
     </header>
