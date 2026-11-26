@@ -46,3 +46,26 @@ Route::post('/signin', [AuthController::class, 'registration']);
 // Новости
 Route::get('/articles', [ArticleController::class, 'index'])
     ->name('articles.index');
+
+// Создание новости
+Route::get('/articles/create', [ArticleController::class, 'create'])
+    ->name('articles.create');
+Route::post('/articles', [ArticleController::class, 'store'])
+    ->name('articles.store');
+
+// Просмотр отдельной новости
+Route::get('/articles/{article}', [ArticleController::class, 'show'])
+    ->name('articles.show');
+
+
+// Редактирование новости
+Route::get('/articles/{article}/edit', [ArticleController::class, 'edit'])
+    ->name('articles.edit');
+
+// Обновление новости
+Route::put('/articles/{article}', [ArticleController::class, 'update'])
+    ->name('articles.update');
+
+// Удаление новости
+Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])
+    ->name('articles.destroy');
