@@ -16,7 +16,11 @@
         </div>
     @endif
 
-    <form action="{{ route('articles.store') }}" method="POST">
+    <form
+        action="{{ route('articles.store') }}"
+        method="POST"
+        id="articleForm"
+    >
 
         @csrf
 
@@ -68,9 +72,20 @@
 
         <br>
 
-        <button type="submit">Добавить новость</button>
+        <button type="submit" id="submitButton">
+            Добавить новость
+        </button>
 
     </form>
+
+    <script>
+        document.getElementById('articleForm').addEventListener('submit', function () {
+            const button = document.getElementById('submitButton');
+
+            button.disabled = true;
+            button.textContent = 'Добавление...';
+        });
+    </script>
 
     <br>
 

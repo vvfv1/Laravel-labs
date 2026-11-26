@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewArticleMail;
 use App\Models\Article;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ArticleController extends Controller
 {
@@ -32,7 +35,18 @@ class ArticleController extends Controller
             'image' => 'nullable|url|max:255',
         ]);
 
-        Article::create($validated);
+        // Сохраняем статью в базе данных
+        $article = Article::create($validated);
+
+        // Получаем адрес электронной почты модератора из .env
+        $moderatorEmail = env('MAIL_MODERATOR_ADDRESS');
+
+        // Отправляем уведомление модератору
+        if ($moderatorEmail) {
+            Mail::to($moderatorEmail)->send(
+                new NewArticleMail($article)
+            );
+        }
 
         return redirect()
             ->route('articles.index')
