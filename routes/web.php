@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\MainController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CommentController;
+use Illuminate\Support\Facades\Route;
 
 // Главная страница
 Route::get('/', [MainController::class, 'index'])->name('home');
@@ -17,7 +18,6 @@ Route::get('/about', function () {
 
 // Страница "Контакты"
 Route::get('/contacts', function () {
-
     $contacts = [
         [
             'name' => 'Email',
@@ -36,7 +36,6 @@ Route::get('/contacts', function () {
     return view('contacts', [
         'contacts' => $contacts
     ]);
-
 })->name('contacts');
 
 // Регистрация
@@ -47,7 +46,7 @@ Route::post('/signin', [AuthController::class, 'registration']);
 Route::get('/articles', [ArticleController::class, 'index'])
     ->name('articles.index');
 
-// Операции с новостями — только для авторизованных
+// Операции с новостями и комментариями — только для авторизованных
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/articles/create', [ArticleController::class, 'create'])
@@ -65,6 +64,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])
         ->name('articles.destroy');
 
+    // Добавление комментария
+    Route::post('/articles/{article}/comments', [CommentController::class, 'store'])
+        ->name('comments.store');
+
+    // Удаление комментария
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])
+        ->name('comments.destroy');
+
+    // Выход из аккаунта
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
 });
@@ -73,7 +81,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/articles/{article}', [ArticleController::class, 'show'])
     ->name('articles.show');
 
-// Регистрация и авторизация 
+// Регистрация и авторизация
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])
     ->name('register');
 
@@ -85,6 +93,3 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])
 
 Route::post('/login', [AuthController::class, 'login'])
     ->name('login.store');
-
-Route::post('/logout', [AuthController::class, 'logout'])
-    ->name('logout');

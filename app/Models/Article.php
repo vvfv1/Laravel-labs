@@ -13,6 +13,11 @@ class Article extends Model
         'title',
         'author',
         'description',
-        'image'
+        'image',
     ];
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

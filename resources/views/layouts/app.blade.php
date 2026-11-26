@@ -110,8 +110,13 @@
                 <a href="{{ route('home') }}">Главная</a>
                 <a href="{{ route('about') }}">О нас</a>
                 <a href="{{ route('contacts') }}">Контакты</a>
+                <a href="{{ route('articles.index') }}">Новости</a>
 
                 @auth
+                    @can('create', \App\Models\Article::class)
+                        <a href="{{ route('articles.create') }}">Создать новость</a>
+                    @endcan
+
                     <span>Привет, {{ Auth::user()->name }}!</span>
 
                     <form action="{{ route('logout') }}" method="POST">

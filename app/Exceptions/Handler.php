@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -26,5 +27,20 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Обработка ошибок доступа.
+     */
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof AuthorizationException) {
+            return response()->view('errors.403', [
+                'message' => $exception->getMessage()
+                    ?: 'У вас нет прав для выполнения этого действия.',
+            ], 403);
+        }
+
+        return parent::render($request, $exception);
     }
 }

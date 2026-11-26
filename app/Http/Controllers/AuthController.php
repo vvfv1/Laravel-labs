@@ -8,25 +8,21 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    // Старая форма регистрации из Lab 3
     public function create()
     {
         return view('auth.signin');
     }
 
-    // Старая регистрация теперь тоже сохраняет пользователя
     public function registration(Request $request)
     {
         return $this->register($request);
     }
 
-    // Отображение формы регистрации
     public function showRegistrationForm()
     {
         return view('auth.register');
     }
 
-    // Сохранение нового пользователя
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -42,13 +38,11 @@ class AuthController extends Controller
             ->with('success', 'Регистрация прошла успешно! Теперь войдите в аккаунт.');
     }
 
-    // Отображение формы авторизации
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    // Авторизация пользователя
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -56,7 +50,7 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt($credentials)) {
+        if (!Auth::guard('web')->attempt($credentials)) {
             return back()
                 ->withErrors([
                     'email' => 'Неверный email или пароль.',
@@ -64,35 +58,25 @@ class AuthController extends Controller
                 ->onlyInput('email');
         }
 
-        // Обновляем идентификатор сессии
         $request->session()->regenerate();
 
-        // Получаем авторизованного пользователя
-        $user = Auth::user();
-
-        // Создаём Sanctum-токен
+        $user = Auth::guard('web')->user();
         $user->createToken('auth-token');
 
         return redirect()->route('home');
     }
 
-    // Выход пользователя
     public function logout(Request $request)
     {
-        $user = $request->user();
+        $user = Auth::guard('web')->user() ?? $request->user();
 
         if ($user) {
-            // Удаляем токены пользователя
             $user->tokens()->delete();
         }
 
-        // Завершаем авторизацию
-        Auth::logout();
+        Auth::guard('web')->logout();
 
-        // Аннулируем сессию
         $request->session()->invalidate();
-
-        // Обновляем CSRF-токен
         $request->session()->regenerateToken();
 
         return redirect()->route('home');

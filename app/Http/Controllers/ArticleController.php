@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
-    // Список новостей
     public function index()
     {
         $articles = Article::paginate(5);
@@ -15,15 +14,17 @@ class ArticleController extends Controller
         return view('articles.index', compact('articles'));
     }
 
-    // Форма создания новости
     public function create()
     {
+        $this->authorize('create', Article::class);
+
         return view('articles.create');
     }
 
-    // Сохранение новости
     public function store(Request $request)
     {
+        $this->authorize('create', Article::class);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
@@ -38,21 +39,22 @@ class ArticleController extends Controller
             ->with('success', 'Новость успешно добавлена!');
     }
 
-    // Просмотр отдельной новости
     public function show(Article $article)
     {
         return view('articles.show', compact('article'));
     }
 
-    // Форма редактирования новости
     public function edit(Article $article)
     {
+        $this->authorize('update', $article);
+
         return view('articles.edit', compact('article'));
     }
 
-    // Обновление новости
     public function update(Request $request, Article $article)
     {
+        $this->authorize('update', $article);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:255',
@@ -66,9 +68,11 @@ class ArticleController extends Controller
             ->route('articles.index')
             ->with('success', 'Новость успешно обновлена!');
     }
-    // Удаление новости
+
     public function destroy(Article $article)
     {
+        $this->authorize('delete', $article);
+
         $article->delete();
 
         return redirect()
