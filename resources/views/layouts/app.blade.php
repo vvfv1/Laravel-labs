@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -93,6 +92,7 @@
                 <a href="{{ route('home') }}">Главная</a>
                 <a href="{{ route('about') }}">О нас</a>
                 <a href="{{ route('contacts') }}">Контакты</a>
+                <a href="{{ url('/signin') }}">Регистрация</a>
             </div>
         </nav>
     </header>
